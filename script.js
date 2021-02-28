@@ -6,9 +6,16 @@ let imageLoaded = 0;
 let totalImages = 0;
 let ready = false;
 
-const count = 30;
+let isFirstTimeLoad = true;
+
+const imgCount = 5;// if internet connection is bad, thats why!
 const apiKey = 'a8hKG1wofwAEodiM3dKqR3e_FXGDuITmes1zR0gRgOI';
-const apiUrl = `https://api.unsplash.com/photos/random/?client_id=${apiKey}&count=${count}`;
+let apiUrl = `https://api.unsplash.com/photos/random/?client_id=${apiKey}&count=${imgCount}`;
+
+//helper function to make count to 30
+function updateAPICount(count){
+    apiUrl = `https://api.unsplash.com/photos/random/?client_id=${apiKey}&count=${count}`;
+}
 
 //helper function to check if each image is loaded
 function ImageLoaded(){
@@ -78,7 +85,12 @@ async function getPhotos(){
         const response = await fetch(apiUrl);
         photosArray = await response.json();
         console.log(photosArray);
-        displayPhotos();
+        displayPhotos();    
+        //Will update count to 30 after initial load of 5 img is done
+        if(isFirstTimeLoad){
+            updateAPICount(30);
+            isFirstTimeLoad = false;
+        }
     } catch(error){
         console.log(error);
     }
